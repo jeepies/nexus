@@ -1,5 +1,3 @@
 export default function NoProfileCard() {
-    return <>
-        No Profile
-    </>
+  return <>No Profile</>;
 }
