@@ -1,18 +1,50 @@
 import { LoaderFunctionArgs } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { MetaFunction, useLoaderData } from "@remix-run/react";
+import NoProfileCard from "~/components/NoProfileCard";
 import { fetchRunemetrics } from "~/services/runescape";
 
 export async function loader({ params }: LoaderFunctionArgs) {
     if (!params.username) return;
 
-    const data = fetchRunemetrics(params.username, 20);
+    let data = await fetchRunemetrics(params.username, 20);
 
-    return data;
+    return { username: params.username ?? "Kelcei", data: data ?? {}, error: data.error };
 }
 
 export default function Profile() {
-    const data  = useLoaderData<typeof loader>();
-    console.log(data);
+    const data = useLoaderData<typeof loader>();
 
-    return <>hai</>
+    if (!data) {
+        return <>internal error</>
+    }
+
+    if (data.error) {
+        switch (data.error) {
+            case "NO_PROFILE":
+                return <NoProfileCard/>
+        }
+    }
+
+    return <>
+        {data.username}'s Profile
+    </>
 }
+
+export const meta: MetaFunction<typeof loader> = (loader) => {
+    if (!loader || !loader.data || loader.data.error !== "NO_PROFILE") {
+        return [
+            { title: `Internal Error - Nexus` },
+            { name: "description", content: `Unfortunately, we've ran into an issue! If this issue persists, please don't hesitate to message us!` },
+        ];
+    }
+    if (loader.data.error === "NO_PROFILE") {
+        return [
+            { title: `Invalid Profile - Nexus` },
+            { name: "description", content: `Unfortunately, ${loader.data.username} does not play RuneScape!` },
+        ];
+    }
+    return [
+        { title: `${loader.data.username}'s Profile - Nexus` },
+        { name: "description", content: `View ${loader.data.username}'s profile on Nexus` },
+    ];
+};
