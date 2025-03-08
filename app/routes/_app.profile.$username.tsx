@@ -3,14 +3,13 @@ import { MetaFunction, useLoaderData } from "@remix-run/react";
 import NoProfileCard from "~/components/NoProfileCard";
 import ProfileHeader from "~/components/ProfileHeader";
 import ProfileLevelsCard from "~/components/ProfileLevelsCard";
-import ProfileLevelsCardProps from "~/components/ProfileLevelsCard";
 import { fetchChatHeadPicture, fetchRunemetrics } from "~/services/runescape";
 
 export async function loader({ params }: LoaderFunctionArgs) {
     if (!params.username) return;
 
-    let data = await fetchRunemetrics(params.username, 20);
-    let chatHead = await fetchChatHeadPicture(params.username);
+    const data = await fetchRunemetrics(params.username, 20);
+    const chatHead = await fetchChatHeadPicture(params.username);
 
     return { username: params.username ?? "Sliske", data: data ?? {}, error: data.error, chatHead: chatHead };
 }
