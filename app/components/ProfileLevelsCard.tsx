@@ -1,4 +1,4 @@
-import { fetchSkillIcon, skills } from "~/services/runescape"
+import { skills } from "~/services/runescape"
 
 interface SkillValue {
     level: number,
@@ -17,10 +17,7 @@ export default function ProfileLevelsCardProps(props: ProfileLevelsCardProps) {
     return <>
         {
             props.SkillValues.forEach((skillValue) => {
-                
-                return <>
-                    <img src={`data:image/png;base64, ${fetchSkillIcon(skills[skillValue.id])}`} />
-                </>
+                console.log(`${skills[skillValue.id]} - ${skillValue.level}`)
             })
         }
     </>

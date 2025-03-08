@@ -37,12 +37,3 @@ export async function fetchChatHeadPicture(username: string) {
     })
     return Buffer.from(childResult.data, 'binary').toString('base64');
 }
-
-export async function fetchSkillIcon(name: string) {
-    const result = await axios.get(`https://runescape.wiki/images/${name}_detail.png`, {
-        responseType: "arraybuffer",
-        timeout: 5000,
-    })
-    console.log(result)
-    return Buffer.from(result.data, 'binary').toString('base64');
-}
