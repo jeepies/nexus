@@ -37,7 +37,7 @@ export default function ProfileLevelsCardProps(props: ProfileLevelsCardProps) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {props.SkillValues.map((skill) => {
+            {props.SkillValues.sort((a, b) => a.id - b.id).map((skill) => {
               const XP = Math.floor(skill.xp / 10).toLocaleString()
               return (
                 <TableRow>
