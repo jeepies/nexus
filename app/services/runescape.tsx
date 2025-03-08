@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const api = axios.create({
     baseURL: "https://apps.runescape.com",
-    timeout: 1000,
+    timeout: 2500,
     validateStatus: (status) => status < 500,
 })
 
