@@ -31,7 +31,7 @@ export default function Profile() {
 }
 
 export const meta: MetaFunction<typeof loader> = (loader) => {
-    if (!loader || !loader.data || loader.data.error !== "NO_PROFILE") {
+    if (!loader || !loader.data) {
         return [
             { title: `Internal Error - Nexus` },
             { name: "description", content: `Unfortunately, we've ran into an issue! If this issue persists, please don't hesitate to message us!` },
