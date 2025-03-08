@@ -1,14 +1,18 @@
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { MetaFunction, useLoaderData } from "@remix-run/react";
 import NoProfileCard from "~/components/NoProfileCard";
-import { fetchRunemetrics } from "~/services/runescape";
+import ProfileHeader from "~/components/ProfileHeader";
+import ProfileLevelsCard from "~/components/ProfileLevelsCard";
+import ProfileLevelsCardProps from "~/components/ProfileLevelsCard";
+import { fetchChatHeadPicture, fetchRunemetrics } from "~/services/runescape";
 
 export async function loader({ params }: LoaderFunctionArgs) {
     if (!params.username) return;
 
     let data = await fetchRunemetrics(params.username, 20);
+    let chatHead = await fetchChatHeadPicture(params.username);
 
-    return { username: params.username ?? "Kelcei", data: data ?? {}, error: data.error };
+    return { username: params.username ?? "Sliske", data: data ?? {}, error: data.error, chatHead: chatHead };
 }
 
 export default function Profile() {
@@ -21,12 +25,13 @@ export default function Profile() {
     if (data.error) {
         switch (data.error) {
             case "NO_PROFILE":
-                return <NoProfileCard/>
+                return <NoProfileCard />
         }
     }
 
     return <>
-        {data.username}'s Profile
+        <ProfileHeader Username={data.username} ChatHead={data.chatHead} TotalXP={data.data.totalxp} Rank={data.data.rank} LoggedIn={data.data.loggedin} />
+        <ProfileLevelsCard SkillValues={data.data.skillvalues}/>
     </>
 }
 

@@ -1,5 +1,12 @@
 import axios from 'axios';
 
+// the order of this array matters. how silly I am for making it like this, instead of an object.
+export const skills = ["Attack", "Defence", "Strength", "Constitution", "Ranged", "Prayer", "Magic", 
+    "Cooking", "Woodcutting", "Fletching", "Fishing", "Firemaking", "Crafting", "Smithing", "Mining", 
+    "Herblore", "Agility", "Thieving", "Slayer", "Farming", "Runecrafting", "Hunter", "Construction", 
+    "Summoning", "Dungeoneering", "Divination", "Invention", "Archaeology", "Necromancy"
+];
+
 const appsApi = axios.create({
     baseURL: "https://apps.runescape.com",
     timeout: 5000,
@@ -29,4 +36,13 @@ export async function fetchChatHeadPicture(username: string) {
         responseType: "arraybuffer",
     })
     return Buffer.from(childResult.data, 'binary').toString('base64');
+}
+
+export async function fetchSkillIcon(name: string) {
+    const result = await axios.get(`https://runescape.wiki/images/${name}_detail.png`, {
+        responseType: "arraybuffer",
+        timeout: 5000,
+    })
+    console.log(result)
+    return Buffer.from(result.data, 'binary').toString('base64');
 }
