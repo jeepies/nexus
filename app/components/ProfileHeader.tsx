@@ -15,7 +15,7 @@ export default function ProfileHeader(props: ProfileHeaderProps) {
         <img src={`data:image/png;base64, ${props.ChatHead}`} />
         <div>
           <h1 className="text-3xl text-bold">{props.Username}</h1>
-          <h2 className="text-xs">#{props.Rank}</h2>
+          <h2 className="text-xs">Rank {props.Rank}</h2>
         </div>
       </CardTitle>
     </Card>

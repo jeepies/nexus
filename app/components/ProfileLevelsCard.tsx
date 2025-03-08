@@ -32,19 +32,20 @@ export default function ProfileLevelsCardProps(props: ProfileLevelsCardProps) {
               <TableHead className="w-[100px]">Skill</TableHead>
               <TableHead>Level</TableHead>
               <TableHead>XP</TableHead>
-              <TableHead className="text-right">Daily XP</TableHead>
-              <TableHead className="text-right">Monthly XP</TableHead>
+              {/* <TableHead className="text-right">Daily XP</TableHead>
+              <TableHead className="text-right">Monthly XP</TableHead> */}
             </TableRow>
           </TableHeader>
           <TableBody>
             {props.SkillValues.map((skill) => {
+              const XP = Math.floor(skill.xp / 10).toLocaleString()
               return (
                 <TableRow>
                   <TableCell>{skills[skill.id]}</TableCell>
                   <TableCell>{skill.level}</TableCell>
-                  <TableCell>{skill.xp.toLocaleString()}</TableCell>
-                  <TableCell className="text-right">Daily XP</TableCell>
-                  <TableCell className="text-right">Monthly XP</TableCell>
+                  <TableCell>{XP}</TableCell>
+                  {/* <TableCell className="text-right">Daily XP</TableCell>
+                  <TableCell className="text-right">Monthly XP</TableCell> */}
                 </TableRow>
               );
             })}
