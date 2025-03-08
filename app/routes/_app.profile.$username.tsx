@@ -3,53 +3,74 @@ import { MetaFunction, useLoaderData } from "@remix-run/react";
 import NoProfileCard from "~/components/NoProfileCard";
 import ProfileHeader from "~/components/ProfileHeader";
 import ProfileLevelsCard from "~/components/ProfileLevelsCard";
-import ProfileLevelsCardProps from "~/components/ProfileLevelsCard";
 import { fetchChatHeadPicture, fetchRunemetrics } from "~/services/runescape";
 
 export async function loader({ params }: LoaderFunctionArgs) {
-    if (!params.username) return;
+  if (!params.username) return;
 
-    let data = await fetchRunemetrics(params.username, 20);
-    let chatHead = await fetchChatHeadPicture(params.username);
+  const data = await fetchRunemetrics(params.username, 20);
+  const chatHead = await fetchChatHeadPicture(params.username);
 
-    return { username: params.username ?? "Sliske", data: data ?? {}, error: data.error, chatHead: chatHead };
+  return {
+    username: params.username ?? "Sliske",
+    data: data ?? {},
+    error: data.error,
+    chatHead: chatHead,
+  };
 }
 
 export default function Profile() {
-    const data = useLoaderData<typeof loader>();
+  const data = useLoaderData<typeof loader>();
 
-    if (!data) {
-        return <>internal error</>
+  if (!data) {
+    return <>internal error</>;
+  }
+
+  if (data.error) {
+    switch (data.error) {
+      case "NO_PROFILE":
+        return <NoProfileCard />;
     }
+  }
 
-    if (data.error) {
-        switch (data.error) {
-            case "NO_PROFILE":
-                return <NoProfileCard />
-        }
-    }
-
-    return <>
-        <ProfileHeader Username={data.username} ChatHead={data.chatHead} TotalXP={data.data.totalxp} Rank={data.data.rank} LoggedIn={data.data.loggedin} />
-        <ProfileLevelsCard SkillValues={data.data.skillvalues}/>
-    </>
+  return (
+    <div className="mx-6 my-2 grid grid-cols-1 gap-4">
+      <ProfileHeader
+        Username={data.username}
+        ChatHead={data.chatHead}
+        TotalXP={data.data.totalxp}
+        Rank={data.data.rank}
+        LoggedIn={data.data.loggedin}
+      />
+      <ProfileLevelsCard SkillValues={data.data.skillvalues} />
+    </div>
+  );
 }
 
 export const meta: MetaFunction<typeof loader> = (loader) => {
-    if (!loader || !loader.data) {
-        return [
-            { title: `Internal Error - Nexus` },
-            { name: "description", content: `Unfortunately, we've ran into an issue! If this issue persists, please don't hesitate to message us!` },
-        ];
-    }
-    if (loader.data.error === "NO_PROFILE") {
-        return [
-            { title: `Invalid Profile - Nexus` },
-            { name: "description", content: `Unfortunately, ${loader.data.username} does not play RuneScape!` },
-        ];
-    }
+  if (!loader || !loader.data) {
     return [
-        { title: `${loader.data.username}'s Profile - Nexus` },
-        { name: "description", content: `View ${loader.data.username}'s profile on Nexus` },
+      { title: `Internal Error - Nexus` },
+      {
+        name: "description",
+        content: `Unfortunately, we've ran into an issue! If this issue persists, please don't hesitate to message us!`,
+      },
     ];
+  }
+  if (loader.data.error === "NO_PROFILE") {
+    return [
+      { title: `Invalid Profile - Nexus` },
+      {
+        name: "description",
+        content: `Unfortunately, ${loader.data.username} does not play RuneScape!`,
+      },
+    ];
+  }
+  return [
+    { title: `${loader.data.username}'s Profile - Nexus` },
+    {
+      name: "description",
+      content: `View ${loader.data.username}'s profile on Nexus`,
+    },
+  ];
 };
